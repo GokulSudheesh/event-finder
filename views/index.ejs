@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+    <title>Event Finder</title>
+    <link rel="stylesheet" href="/styles/index.css">
+</head>
+<body>
+    <div id='map' style='width: 400px; height: 300px;'></div>
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZ29rdWxzdWRoZWVzaCIsImEiOiJja3ZhcXdnbDYwa2pyMm9uemc1aWpxNGh3In0.R8Tas9nUX9-WsZbGtJQrvw';
+    var map = new mapboxgl.Map(
+        {
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [55.2708, 25.2048],
+            zoom: 5,
+        }
+    );
+
+    const eventsJSON = JSON.parse("<%- eventsJSON %>");
+    console.log(eventsJSON);
+
+    // add markers to map
+    for (const event of eventsJSON.events) {
+        // create a HTML element for each feature
+        const el = document.createElement('div');
+        el.className = 'marker';
+
+        // make a marker for each feature and add to the map
+        new mapboxgl.Marker(el).setLngLat(event.location)
+        .setPopup(
+            new mapboxgl.Popup({ offset: 25 }) // add popups
+            .setHTML(
+                `<h3>${event.title}</h3><p>${event.description}</p>`
+            )
+        )
+        .addTo(map);
+    }
+</script>
+</body>
+</html>
