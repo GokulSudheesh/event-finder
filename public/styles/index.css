@@ -4,26 +4,104 @@ body {
 }
 
 #map {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
+    /* position: absolute; */
+    /* top: 0; */
+    /* bottom: 0; */
+    height: 100vh;
+    width: 100vw;
 }
 
 .marker {
-    background-image: url('https://static.thenounproject.com/png/17626-200.png');
     background-size: cover;
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     cursor: pointer;
 }
 
+.academic{
+    background-image: url("/icons/academic.png");
+}
+.school-holidays{
+    background-image: url("/icons/default.png");
+}
+.public-holidays{
+    background-image: url("/icons/default.png");
+}
+.observances{
+    background-image: url("/icons/default.png");
+}
+.politics{
+    background-image: url("/icons/default.png");
+}
+.conferences{
+    background-image: url("/icons/conference.png");
+}
+.expos{
+    background-image: url("/icons/expos.png");
+}
+.concerts{
+    background-image: url("/icons/concerts.png");
+}
+.festivals{
+    background-image: url("/icons/festivals.png");
+}
+.performing-arts{
+    background-image: url("/icons/default.png");
+}
+.sports{
+    background-image: url("/icons/sports.png");
+}
+.community{
+    background-image: url("/icons/default.png");
+}
+.daylight-savings{
+    background-image: url("/icons/default.png");
+}
+.airport-delays{
+    background-image: url("/icons/airport-delays.png");
+}
+.severe-weather{
+    background-image: url("/icons/severe-weather.png");
+}
+.disasters{
+    background-image: url("/icons/disasters.png");
+}
+.terror{
+    background-image: url("/icons/default.png");
+}
+.health-warnings{
+    background-image: url("/icons/default.png");
+}
+
+.Minor {
+    color: #ff0000;
+    font-weight: bold;
+}
+.Moderate {
+    color: #ff7f50;
+    font-weight: bold;
+}
+.Important {
+    color: #ffa500;
+    font-weight: bold;
+}
+.Significant {
+    color: #0000ff;
+    font-weight: bold;
+}
+.Major {
+    color: #006400;
+    font-weight: bold;
+}
+
 .mapboxgl-popup {
-    max-width: 200px;
+    max-width: 20vw;
+    word-wrap: break-word;
 }
 
 .mapboxgl-popup-content {
-    text-align: center;
+    /* text-align: center; */
+    color: #808080;
     /* font-family: 'Open Sans', sans-serif; */
 }

@@ -4,14 +4,34 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Mapbox Scripts -->
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <!-- Mapbox CSS -->
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
-    <title>Event Finder</title>
+    <!-- Font Awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    <!-- Style Sheet -->
     <link rel="stylesheet" href="/styles/index.css">
+    <title>Event Finder</title>
 </head>
 <body>
-    <div id='map' style='width: 400px; height: 300px;'></div>
+    <div id='map'></div>
 <script>
+    function getImpact(local_rank){
+        let impact = "";
+        if (local_rank <= 20){
+            impact = "Minor";
+        } else if (local_rank <= 40) {
+            impact = "Moderate";
+        } else if (local_rank <= 60) {
+            impact = "Important";
+        } else if (local_rank <= 80) {
+            impact = "Significant";
+        } else {
+            impact = "Major";
+        }
+        return (impact);
+    }
     mapboxgl.accessToken = 'pk.eyJ1IjoiZ29rdWxzdWRoZWVzaCIsImEiOiJja3ZhcXdnbDYwa2pyMm9uemc1aWpxNGh3In0.R8Tas9nUX9-WsZbGtJQrvw';
     var map = new mapboxgl.Map(
         {
@@ -30,13 +50,22 @@
         // create a HTML element for each feature
         const el = document.createElement('div');
         el.className = 'marker';
+        el.classList.add(event.category); // Add icon for specific category
+        let impact = getImpact(event.local_rank);
+        let date_format = new Date(event.start).toDateString();
 
         // make a marker for each feature and add to the map
         new mapboxgl.Marker(el).setLngLat(event.location)
         .setPopup(
             new mapboxgl.Popup({ offset: 25 }) // add popups
             .setHTML(
-                `<h3>${event.title}</h3><p>${event.description}</p>`
+                `<h3>${event.title}</h3>
+                ${event.description ? `<p><i style="color: #0000ff;" class="fas fa-info-circle"></i> ${event.description}</p>` : ""}
+                <p><i style="color: #d87093;" class="fas fa-circle"></i> Category: ${event.category}</p>                
+                <p><i class="fas fa-calendar"></i> ${date_format}</p>
+                <p>Time: ${event.start} to ${event.end}</p>
+                <p><i style="color: #ffa500;" class="fas fa-fire"></i> Local Rank: <span class=${impact}>${impact}</span></p>
+                ${event.labels ? `<p>${event.labels}</p>` : ""}`
             )
         )
         .addTo(map);

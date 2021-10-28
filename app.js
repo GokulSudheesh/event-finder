@@ -14,7 +14,7 @@ const PREDICT_HQ_TOKEN = process.env.PREDICT_HQ_TOKEN;
 const client = new phq.Client({access_token: PREDICT_HQ_TOKEN, fetch: crossFetch});
 
 app.get("/", function(req, res){
-    client.events.search({ country: "AE" })
+    client.events.search({ country: "AE", limit: 100 })
     .then(
         (results) => {
             // console.log(results.result.results);
