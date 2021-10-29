@@ -29,6 +29,15 @@ app.get("/", function(req, res){
     );
 });
 
+app.post("/", function(req, res){
+    const keyword = req.body.q;
+    if (keyword) {
+        res.redirect(`/search/${keyword}`);
+    } else {
+        res.redirect("/");
+    }
+});
+
 app.get("/category/:category", function(req, res){
     console.log(req.params);
     res.redirect("/");

@@ -15,6 +15,12 @@
     <title>Event Finder</title>
 </head>
 <body>
+    <div id="search-tab">
+        <form action="/" method="POST">
+            <input id="search-input" type="text" placeholder="Search..." name="q" required="true">
+            <button id="search-icon" type="submit"><i style="color: #ffffff;" class="fa fa-search"></i></button>
+        </form>
+    </div>
     <div id='map'></div>
 <script>
     function getImpact(local_rank){
