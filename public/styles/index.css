@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: 'Montserrat', sans-serif;
 }
 
 #search-tab {
@@ -29,12 +30,77 @@ body {
     /* margin: auto; */
     width: 30%;
     padding: 10px;
-    margin-top: 8px;
+    /* margin-top: 8px; */
     font-size: 0.9rem;
     border: none;
     border-radius: 50px;
 }
 
+.sidebar {
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0;
+    left: 0;
+    background-color: #0c0042; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+}
+
+/* The sidebar links */
+.sidebar-text {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 1.1em;
+    color: #a0a0a0;
+    display: block;
+    /* transition: 0.3s; */
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidebar-text:hover {
+    color: #ffffff;
+}
+
+.drop-down {
+    font-family: 'Montserrat', sans-serif;
+    height: 20px;
+    width: 50%;
+    margin-left: 5vw;
+}
+
+#filter-btn {
+    margin: 50px 50px 0 50px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    background: #2d13a1;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+#filter-btn:hover {
+    background: #5434e3;
+}
+
+/* The button used to open the sidebar */
+#sidebarbtn {
+    display: inline-flex;
+    float: left;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #0c0042;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+}
+
+#sidebarbtn:hover {
+    background-color: #1f0496;
+}
 #map {
     /* position: absolute; */
     /* top: 0; */
