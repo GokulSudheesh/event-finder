@@ -39,7 +39,7 @@ const impact_cond = {
 
 app.get("/", function(req, res){
     const today  = new Date().toISOString().slice(0,10);
-    fetchData("https://api.predicthq.com/v1/events/?limit=100&country=AE")
+    fetchData(`https://api.predicthq.com/v1/events/?limit=100&country=AE&start.gte=${today}`)
     .then(data => {
         // console.log(data.results);
         res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
