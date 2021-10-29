@@ -45,7 +45,7 @@ app.get("/", function(req, res){
         res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
     })
     .catch(error => {
-        console.error(err);
+        console.error(error);
         res.sendFile(__dirname + "/failure.html");
     });
 });
@@ -69,7 +69,7 @@ app.get("/impact/:impact", function(req, res){
         res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
     })
     .catch(error => {
-        console.error(err);
+        console.error(error);
         res.sendFile(__dirname + "/failure.html");
     });
 });
@@ -84,7 +84,7 @@ app.get("/category/:category/impact/:impact", function(req, res){
         res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
     })
     .catch(error => {
-        console.error(err);
+        console.error(error);
         res.sendFile(__dirname + "/failure.html");
     });
 });
@@ -99,7 +99,7 @@ app.get(["/search/:q", "/category/:category"], function(req, res){
         res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
     })
     .catch(error => {
-        console.error(err);
+        console.error(error);
         res.sendFile(__dirname + "/failure.html");
     });
 });
