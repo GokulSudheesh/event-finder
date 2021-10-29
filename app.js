@@ -54,22 +54,6 @@ app.post("/", function(req, res){
     }
 });
 
-app.get("/category/:category", function(req, res){
-    const today  = new Date().toISOString().slice(0,10);
-    client.events.search({ country: "AE", limit: 100, "start.gte": today, ...req.params })
-    .then(
-        (results) => {
-            // console.log(results.result.results);
-            res.render("index", { eventsJSON: JSON.stringify({ events: results.result.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
-        }
-    ).catch(
-        (err) => {
-            console.error(err);
-            res.sendFile(__dirname + "/failure.html");
-        }    
-    );
-});
-
 app.get("/impact/:impact", function(req, res){
     const today  = new Date().toISOString().slice(0,10);
     // console.log(req.params);
@@ -114,7 +98,7 @@ app.get("/category/:category/impact/:impact", function(req, res){
     });
 });
 
-app.get("/search/:q", function(req, res){
+app.get(["/search/:q", "/category/:category"], function(req, res){
     const today  = new Date().toISOString().slice(0,10);
     client.events.search({ country: "AE", limit: 100, "start.gte": today, ...req.params })
     .then(
