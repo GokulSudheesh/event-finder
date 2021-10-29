@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
-const { fetch } = require('cross-fetch');
+const crossFetch = require('cross-fetch');
+const phq = require('predicthq');
 
 
 const port = process.env.PORT || 3000;
@@ -10,6 +11,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 const PREDICT_HQ_TOKEN = process.env.PREDICT_HQ_TOKEN;
+const client = new phq.Client({access_token: PREDICT_HQ_TOKEN, fetch: crossFetch});
 
 const options = {
     method: "GET",
@@ -20,7 +22,7 @@ const options = {
 }
 
 function fetchData(url){
-    return fetch(url, options)
+    return crossFetch.fetch(url, options)
     .then(response => { 
         if (!response.ok) {
             throw Error("Error");
@@ -39,15 +41,18 @@ const impact_cond = {
 
 app.get("/", function(req, res){
     const today  = new Date().toISOString().slice(0,10);
-    fetchData("https://api.predicthq.com/v1/events/?limit=100&country=AE")
-    .then(data => {
-        // console.log(data.results);
-        res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
-    })
-    .catch(error => {
-        console.error(err);
-        res.sendFile(__dirname + "/failure.html");
-    });
+    client.events.search({ country: "AE", limit: 100, "start.gte": today })
+    .then(
+        (results) => {
+            // console.log(results.result.results);
+            res.render("index", { eventsJSON: JSON.stringify({ events: results.result.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
+        }
+    ).catch(
+        (err) => {
+            console.error(err);
+            res.sendFile(__dirname + "/failure.html");
+        }    
+    );
 });
 
 app.post("/", function(req, res){
@@ -90,18 +95,19 @@ app.get("/category/:category/impact/:impact", function(req, res){
 });
 
 app.get(["/search/:q", "/category/:category"], function(req, res){
-    const { q, category } = req.params;
-    // console.log(q, category);
     const today  = new Date().toISOString().slice(0,10);
-    fetchData(`https://api.predicthq.com/v1/events/?limit=100&country=AE${category ? `&category=${category}` : `&q=${q}`}&start.gte=${today}`)
-    .then(data => {
-        // console.log(data.results);
-        res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
-    })
-    .catch(error => {
-        console.error(err);
-        res.sendFile(__dirname + "/failure.html");
-    });
+    client.events.search({ country: "AE", limit: 100, "start.gte": today, ...req.params })
+    .then(
+        (results) => {
+            // console.log(results.result.results);
+            res.render("index", { eventsJSON: JSON.stringify({ events: results.result.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
+        }
+    ).catch(
+        (err) => {
+            console.error(err);
+            res.sendFile(__dirname + "/failure.html");
+        }    
+    );
 });
 
 app.post("/filter", function(req, res){
