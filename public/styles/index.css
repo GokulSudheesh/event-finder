@@ -5,10 +5,9 @@ body {
 
 #search-tab {
     position: absolute;
-    left: 20px;
-    top: 20px;
     z-index: 1;
-    /* text-align: center; */
+    width: 100vw;
+    text-align: center;
 }
 
 #search-icon {
@@ -28,7 +27,7 @@ body {
 
 #search-input {
     /* margin: auto; */
-    width: 20vw;
+    width: 30%;
     padding: 10px;
     margin-top: 8px;
     font-size: 0.9rem;
