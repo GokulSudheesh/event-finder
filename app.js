@@ -30,11 +30,11 @@ function fetchData(url){
 }
 
 const impact_cond = { 
-    Minor: "&local_rank.gte=0&local_rank.lte=20",
-    Moderate: "&local_rank.gte=21&local_rank.lte=40",
-    Important: "&local_rank.gte=41&local_rank.lte=60",
-    Significant: "&local_rank.gte=61&local_rank.lte=80",
-    Major: "&local_rank.gte=81&local_rank.lte=100",
+    Minor: "local_rank.gte=0&local_rank.lte=20",
+    Moderate: "local_rank.gte=21&local_rank.lte=40",
+    Important: "local_rank.gte=41&local_rank.lte=60",
+    Significant: "local_rank.gte=61&local_rank.lte=80",
+    Major: "local_rank.gte=81&local_rank.lte=100",
 };
 
 app.get("/", function(req, res){
@@ -53,47 +53,18 @@ app.get("/", function(req, res){
 app.post("/", function(req, res){
     const keyword = req.body.q;
     if (keyword) {
-        res.redirect(`/search/${keyword}`);
+        res.redirect(`/search?q=${keyword}`);
     } else {
         res.redirect("/");
     }
 });
 
-app.get("/impact/:impact", function(req, res){
+app.get(["/search", "/filter"], function(req, res){
+    console.log(req.url);
+    const params = new URLSearchParams(req.query);
+    const searchParams = params.toString();
     const today  = new Date().toISOString().slice(0,10);
-    // console.log(req.params);
-    // console.log(impact_cond[req.params.impact]);
-    fetchData(`https://api.predicthq.com/v1/events/?limit=100&country=AE${impact_cond[req.params.impact]}&start.gte=${today}`)
-    .then(data => {
-        // console.log(data.results);
-        res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
-    })
-    .catch(error => {
-        console.error(error);
-        res.sendFile(__dirname + "/failure.html");
-    });
-});
-
-app.get("/category/:category/impact/:impact", function(req, res){
-    const today  = new Date().toISOString().slice(0,10);
-    // console.log(req.params);
-    // console.log(impact_cond[req.params.impact]);
-    fetchData(`https://api.predicthq.com/v1/events/?limit=100&country=AE&category=${req.params.category}${impact_cond[req.params.impact]}&start.gte=${today}`)
-    .then(data => {
-        // console.log(data.results);
-        res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
-    })
-    .catch(error => {
-        console.error(error);
-        res.sendFile(__dirname + "/failure.html");
-    });
-});
-
-app.get(["/search/:q", "/category/:category"], function(req, res){
-    const { q, category } = req.params;
-    // console.log(q, category);
-    const today  = new Date().toISOString().slice(0,10);
-    fetchData(`https://api.predicthq.com/v1/events/?limit=100&country=AE${category ? `&category=${category}` : `&q=${q}`}&start.gte=${today}`)
+    fetchData(`https://api.predicthq.com/v1/events/?limit=100&country=AE&${searchParams}&start.gte=${today}`)
     .then(data => {
         // console.log(data.results);
         res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
@@ -106,12 +77,19 @@ app.get(["/search/:q", "/category/:category"], function(req, res){
 
 app.post("/filter", function(req, res){
     // console.log(req.body);
-    if (req.body.impact && req.body.category) {
-        res.redirect(`/category/${req.body.category}/impact/${req.body.impact}`);
-    } else if (req.body.category) {
-        res.redirect(`/category/${req.body.category}`);
-    } else if (req.body.impact) {
-        res.redirect(`/impact/${req.body.impact}`);
+    let searchParams = [];
+    Object.keys(req.body).forEach(key => {
+        if (req.body[key]) {
+            if (key == "impact") {
+                searchParams.push(impact_cond[req.body[key]]);
+            } else {
+                searchParams.push(`${key}=${req.body[key]}`);
+            }
+        }
+    });
+    searchParams = searchParams.join("&");
+    if (searchParams) {
+        res.redirect(`/filter?${searchParams}`);
     } else {
         res.redirect("/");
     }
