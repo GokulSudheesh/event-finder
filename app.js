@@ -61,10 +61,12 @@ app.post("/", function(req, res){
 
 app.get(["/search", "/filter"], function(req, res){
     console.log(req.url);
+    const today  = new Date().toISOString().slice(0,10);
+    let filter_today = (req.query['start.gte']) ? "" : `&start.gte=${today}`;
     const params = new URLSearchParams(req.query);
     const searchParams = params.toString();
-    const today  = new Date().toISOString().slice(0,10);
-    fetchData(`https://api.predicthq.com/v1/events/?limit=100&country=AE&${searchParams}&start.gte=${today}`)
+    
+    fetchData(`https://api.predicthq.com/v1/events/?limit=100&country=AE&${searchParams}${filter_today}`)
     .then(data => {
         // console.log(data.results);
         res.render("index", { eventsJSON: JSON.stringify({ events: data.results }).replace(/\\/g, '\\\\').replace(/"/g, '\\\"') });
@@ -82,6 +84,12 @@ app.post("/filter", function(req, res){
         if (req.body[key]) {
             if (key == "impact") {
                 searchParams.push(impact_cond[req.body[key]]);
+            } 
+            else if (key == "date") {
+                const startTime = new Date(req.body[key]).toISOString().slice(0,10);
+                const endTime = new Date(req.body[key] + "T24:00:00.000Z").toISOString().slice(0,10);
+                searchParams.push(`start.gte=${startTime}`);
+                searchParams.push(`start.lt=${endTime}`);
             } else {
                 searchParams.push(`${key}=${req.body[key]}`);
             }
